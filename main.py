@@ -13,7 +13,6 @@ def main(page: ft.Page):
     sort_by_status = False
 
     def load_tasks():
-        """ Загружает задачи и обновляет список. """
         task_list.controls.clear()
         tasks = main_db.get_tasks(sort_by_date_desc, sort_by_status)
         for task in tasks:
@@ -21,7 +20,6 @@ def main(page: ft.Page):
         page.update()
 
     def create_task_row(task_id, task_text, created_at, completed):
-        """ Создаёт строку задачи с чекбоксом. """
         task_field = ft.TextField(value=task_text, expand=True, dense=True, read_only=True)
         date_text = ft.Text(value=f"🕒 {created_at}", color=ft.colors.GREY_400, size=12)
         completed_checkbox = ft.Checkbox(
@@ -51,35 +49,31 @@ def main(page: ft.Page):
         ], alignment=ft.MainAxisAlignment.SPACE_BETWEEN)
 
     def add_task(e):
-        """ Добавляет новую задачу в базу данных. """
         if task_input.value.strip():
             main_db.add_task(task_input.value)
             task_input.value = ""
             load_tasks()
 
     def toggle_status(task_id, new_status):
-        """ Изменяет статус задачи и обновляет интерфейс. """
         main_db.update_task_status(task_id, new_status)
         load_tasks()
 
     def toggle_sort_by_date(e):
-        """ Переключает сортировку по дате. """
         nonlocal sort_by_date_desc
         sort_by_date_desc = not sort_by_date_desc
-        sort_date_button.text = "Новые выше" if sort_by_date_desc else "Старые выше"
+        sort_date_button.text = "📅 Новые выше" if sort_by_date_desc else "📅 Старые выше"
         load_tasks()
 
     def toggle_sort_by_status(e):
-        """ Переключает сортировку по статусу. """
         nonlocal sort_by_status
         sort_by_status = not sort_by_status
-        sort_status_button.text = "Выполненные внизу" if sort_by_status else "Выполненные вверху"
+        sort_status_button.text = "✅ Выполненные внизу" if sort_by_status else "✅ Выполненные вверху"
         load_tasks()
 
     task_input = ft.TextField(hint_text='Добавьте задачу', expand=True, dense=True, on_submit=add_task)
     add_button = ft.ElevatedButton("Добавить", on_click=add_task, icon=ft.icons.ADD)
-    sort_date_button = ft.ElevatedButton("Новые выше", on_click=toggle_sort_by_date, icon=ft.icons.DATE_RANGE)
-    sort_status_button = ft.ElevatedButton("Выполненные внизу", on_click=toggle_sort_by_status, icon=ft.icons.CHECK)
+    sort_date_button = ft.ElevatedButton("📅 Новые выше", on_click=toggle_sort_by_date, icon=ft.icons.DATE_RANGE)
+    sort_status_button = ft.ElevatedButton("✅ Выполненные внизу", on_click=toggle_sort_by_status, icon=ft.icons.CHECK)
 
     page.add(
         ft.Column([

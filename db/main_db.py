@@ -1,18 +1,18 @@
 import sqlite3
+from config import DB_PATH
 from db import queries
 
-DB_NEW = "todo.db"
 
 
 def init_db():
-    with sqlite3.connect(DB_NEW) as conn:
+    with sqlite3.connect(DB_PATH) as conn:
         cursor = conn.cursor()
         cursor.execute(queries.CREATE_TABLE_TASKS)
         conn.commit()
 
 
 def get_tasks(sort_by_date_desc=True, sort_by_status=False):
-    with sqlite3.connect(DB_NEW) as conn:
+    with sqlite3.connect(DB_PATH) as conn:
         cursor = conn.cursor()
         query = queries.SELECT_TASKS
         if sort_by_status:
@@ -24,7 +24,7 @@ def get_tasks(sort_by_date_desc=True, sort_by_status=False):
 
 
 def add_task(task):
-    with sqlite3.connect(DB_NEW) as conn:
+    with sqlite3.connect(DB_PATH) as conn:
         cursor = conn.cursor()
         cursor.execute(queries.INSERT_TASK, (task,))
         conn.commit()
@@ -38,14 +38,14 @@ def update_task(task_id, new_text):
 
 
 def update_task_status(task_id, completed):
-    with sqlite3.connect(DB_NEW) as conn:
+    with sqlite3.connect(DB_PATH) as conn:
         cursor = conn.cursor()
         cursor.execute(queries.UPDATE_TASK_STATUS, (int(completed), task_id))
         conn.commit()
 
 
 def delete_task(task_id):
-    with sqlite3.connect(DB_NEW) as conn:
+    with sqlite3.connect(DB_PATH) as conn:
         cursor = conn.cursor()
         cursor.execute(queries.DELETE_TASK, (task_id,))
         conn.commit()
